@@ -1,0 +1,24 @@
+{
+  "name": "module12mysqlchallenge",
+  "version": "1.0.0",
+  "description": "Module 12 challenge",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KyleAlbright/module12mySQLchallenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KyleAlbright/module12mySQLchallenge/issues"
+  },
+  "homepage": "https://github.com/KyleAlbright/module12mySQLchallenge#readme",
+  "dependencies": {
+    "console.table": "^0.10.0"
+  }
+}
