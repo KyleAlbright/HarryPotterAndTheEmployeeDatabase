@@ -1,14 +1,7 @@
-const express = require("express");
+// set up dependencies
 const mysql = require("mysql2");
-const cTable = require(console.table);
+require("console.table");
 const inquirer = require("inquirer");
-
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 // Connect to database
 const db = mysql.createConnection(
@@ -22,6 +15,8 @@ const db = mysql.createConnection(
   },
   console.log(`Connected to the employees_db database.`)
 );
+
+promptQuestions();
 
 //-------------------------code goes here -----------------------------
 // initializing the questions
@@ -40,7 +35,7 @@ function promptQuestions() {
         "Update an employee role",
         "QUIT",
       ],
-      name: choice,
+      name: "choice",
     })
     .then((answers) => {
       console.log(answers.choice);
@@ -90,10 +85,16 @@ function viewAllDept() {
 }
 //Queries all from the employee table
 function viewAllEmp() {
-  db.query("SELECT * FROM employee", function (err, results) {
-    console.table(results);
-    promptQuestions();
-  });
+  db.query(
+    `SELECT employee.id, employee.first_name, employee.last_name, title, name AS department_name, salary, CONCAT(manager.first_name, ' ',manager.last_name) AS manager_name FROM employee 
+  JOIN role ON employee.role_id = role.id
+  JOIN department ON department.id = role.department_id
+  LEFT JOIN employee AS manager ON employee.manager_id = manager.id`,
+    function (err, results) {
+      console.table(results);
+      promptQuestions();
+    }
+  );
 }
 //Queries all from the role table
 function viewAllRoles() {
@@ -104,34 +105,202 @@ function viewAllRoles() {
 }
 
 function addDept() {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "department",
-      message: "What is the name of the department you would like to add?",
-      validate: (deptCheck) => {
-        if (deptCheck) {
-          return true;
-        } else {
-          console.log(
-            "What is the name of the department you would like to add?"
-          );
-          return false;
-        }
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "What is the name of the department you would like to add?",
+        validate: (deptCheck) => {
+          if (deptCheck) {
+            return true;
+          } else {
+            console.log(
+              "What is the name of the department you would like to add?"
+            );
+            return false;
+          }
+        },
       },
-    },
-  ]);
+    ])
+    .then(function (res) {
+      db.query(
+        "INSERT INTO department (name) VALUES (?)",
+        [res.department],
+        function (err, results) {
+          if (err) throw err;
+          console.table("Department added!");
+          promptQuestions();
+        }
+      );
+    });
 }
 
-function addEmp() {}
+function addEmp() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "What is the employee's first name?",
+        validate: (firstNameCheck) => {
+          if (firstNameCheck) {
+            return true;
+          } else {
+            console.log("What is the employee's first name?");
+            return false;
+          }
+        },
+      },
 
-function addDept() {}
+      {
+        type: "input",
+        name: "lastName",
+        message: "What is the employee's last name?",
+        validate: (lastNameCheck) => {
+          if (lastNameCheck) {
+            return true;
+          } else {
+            console.log("What is the employee's last name?");
+            return false;
+          }
+        },
+      },
 
-// Default response for any other request (Not Found)
-app.use((req, res) => {
-  res.status(404).end();
-});
+      {
+        type: "number",
+        name: "roleId",
+        message: "What is the employee's role ID?",
+        validate: (roleIdCheck) => {
+          if (roleIdCheck) {
+            return true;
+          } else {
+            console.log("What is the employee's role ID?");
+            return false;
+          }
+        },
+      },
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+      {
+        type: "number",
+        name: "managerId",
+        message:
+          "What is the employee's Manager ID? If the employee doesn't need one, leave blank.",
+      },
+    ])
+    .then(function (res) {
+      db.query(
+        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+        [res.firstName, res.lastName, res.roleId, res.managerId],
+        function (err, results) {
+          if (err) throw err;
+          console.table("Employee Added");
+        }
+      );
+      promptQuestions();
+    });
+}
+
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "roleTitle",
+        message: "What is the name of the role you would like to add?",
+        validate: (roleTitleCheck) => {
+          if (roleTitleCheck) {
+            return true;
+          } else {
+            console.log("What is the name of the role you would like to add?");
+            return false;
+          }
+        },
+      },
+
+      {
+        type: "number",
+        name: "roleSalary",
+        message: "What is the salary of this new role?",
+        validate: (roleSalaryCheck) => {
+          if (roleSalaryCheck) {
+            return true;
+          } else {
+            console.log("What is the salary of this new role?");
+            return false;
+          }
+        },
+      },
+
+      {
+        type: "number",
+        name: "departmentId",
+        message: "What is the department ID for this new role?",
+        validate: (deptIdCheck) => {
+          if (deptIdCheck) {
+            return true;
+          } else {
+            console.log("What is the department ID for this new role?");
+            return false;
+          }
+        },
+      },
+    ])
+    .then(function (res) {
+      db.query(
+        "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
+        [res.roleTitle, res.roleSalary, res.departmentId],
+        function (err, results) {
+          if (err) throw err;
+          console.table("Role Added");
+        }
+      );
+      promptQuestions();
+    });
+}
+
+function updateEmp() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "nameSearch",
+        message: "Please type last name of employee you would like to update.",
+        validate: (nameSearchCheck) => {
+          if (nameSearchCheck) {
+            return true;
+          } else {
+            console.log(
+              "Please type last name of employee you would like to update."
+            );
+            return false;
+          }
+        },
+      },
+
+      {
+        type: "number",
+        name: "updateRoleId",
+        message: "Please enter a new role Id for employee chosen",
+        validate: (updateRoleIdCheck) => {
+          if (updateRoleIdCheck) {
+            return true;
+          } else {
+            console.log("Please enter a new role Id for employee chosen");
+            return false;
+          }
+        },
+      },
+    ])
+    .then(function (res) {
+      db.query(
+        "UPDATE employee SET role_id = ? WHERE last_name = ?",
+        [res.nameSearch, res.updateRoleId],
+        function (err, results) {
+          if (err) throw err;
+          console.table("Employee info updated!");
+        }
+      );
+      promptQuestions();
+    });
+}

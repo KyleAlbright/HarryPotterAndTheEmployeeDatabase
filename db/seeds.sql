@@ -12,9 +12,9 @@ VALUES
 
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES 
-('Albus', 'Dumbledore', 1, 2), 
-('Minerva', 'McGonagall', 2, 3), 
+('Cornelius', 'Fudge', 6, NULL);
+('Albus', 'Dumbledore', 1, 1), 
+('Minerva', 'McGonagall', 2, 2), 
 ('Rubeus', 'Hagrid', 3, NULL), 
 ('Argus', 'Filch', 4, NULL), 
-('Hermine', 'Granger', 5, NULL), 
-('Cornelius', 'Fudge', 6, 1);
+('Hermine', 'Granger', 5, NULL); 
