@@ -98,7 +98,7 @@ function viewAllEmp() {
 }
 //Queries all from the role table
 function viewAllRoles() {
-  db.query("SELECT * FROM role", function (err, results) {
+  db.query(`SELECT role.id, role.title, department.name AS department, role.salary FROM department LEFT JOIN role ON department.id = role.department_id ORDER BY department.id`, function (err, results) {
     console.table(results);
     promptQuestions();
   });
@@ -250,7 +250,7 @@ function addRole() {
       db.query(
         "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
         [res.roleTitle, res.roleSalary, res.departmentId],
-        function (err, results) {
+        function (err, res) {
           if (err) throw err;
           console.table("Role Added");
         }
@@ -304,3 +304,5 @@ function updateEmp() {
       promptQuestions();
     });
 }
+
+
