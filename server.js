@@ -13,8 +13,9 @@ const db = mysql.createConnection(
     password: "Bluecoats02!",
     database: "employees_db",
   },
-  console.log("                     _ __\r\n        ___                             | \'  \\\r\n   ___  \\ \/  ___         ,\'\\_           | .-. \\        \/|\r\n   \\ \/  | |,\'__ \\  ,\'\\_  |   \\          | | | |      ,\' |_   \/|\r\n _ | |  | |\\\/  \\ \\ |   \\ | |\\_|    _    | |_| |   _ \'-. .-\',\' |_   _\r\n\/\/ | |  | |____| | | |\\_|| |__    \/\/    |     | ,\'_`. | | \'-. .-\',\' `. ,\'\\_\r\n\\\\_| |_,\' .-, _  | | |   | |\\ \\  \/\/    .| |\\_\/ | \/ \\ || |   | | \/ |\\  \\|   \\\r\n `-. .-\'| |\/ \/ | | | |   | | \\ \\\/\/     |  |    | | | || |   | | | |_\\ || |\\_|\r\n   | |  | || \\_| | | |   \/_\\  \\ \/      | |`    | | | || |   | | | .---\'| |\r\n   | |  | |\\___,_\\ \/_\\ _      \/\/       | |     | \\_\/ || |   | | | |  \/\\| |\r\n   \/_\\  | |           \/\/_____\/\/       .||`      `._,\' | |   | | \\ `-\' \/| |\r\n        \/_\\           `------\'        \\ |   AND        `.\\  | |  `._,\' \/_\\\r\n                                       \\|       THE          `.\\                                    _                               \r\n  ___ _ __ ___  _ __ | | ___  _   _  ___  ___         \r\n \/ _ \\ \'_ ` _ \\| \'_ \\| |\/ _ \\| | | |\/ _ \\\/ _ \\        \r\n|  __\/ | | | | | |_) | | (_) | |_| |  __\/  __\/        \r\n \\___|_| |_| |_| .__\/|_|\\___\/ \\__, |\\___|\\___|        \r\n               |_|            |___\/                   \r\n                _       _        _                    \r\n             __| | __ _| |_ __ _| |__   __ _ ___  ___ \r\n            \/ _` |\/ _` | __\/ _` | \'_ \\ \/ _` \/ __|\/ _ \\\r\n           | (_| | (_| | || (_| | |_) | (_| \\__ \\  __\/\r\n            \\__,_|\\__,_|\\__\\__,_|_.__\/ \\__,_|___\/\\___|\r\n                                                     " )
+  console.log('\x1b[33m%s\x1b[0m',"                     _ __\r\n        ___                             | \'  \\\r\n   ___  \\ \/  ___         ,\'\\_           | .-. \\        \/|\r\n   \\ \/  | |,\'__ \\  ,\'\\_  |   \\          | | | |      ,\' |_   \/|\r\n _ | |  | |\\\/  \\ \\ |   \\ | |\\_|    _    | |_| |   _ \'-. .-\',\' |_   _\r\n\/\/ | |  | |____| | | |\\_|| |__    \/\/    |     | ,\'_`. | | \'-. .-\',\' `. ,\'\\_\r\n\\\\_| |_,\' .-, _  | | |   | |\\ \\  \/\/    .| |\\_\/ | \/ \\ || |   | | \/ |\\  \\|   \\\r\n `-. .-\'| |\/ \/ | | | |   | | \\ \\\/\/     |  |    | | | || |   | | | |_\\ || |\\_|\r\n   | |  | || \\_| | | |   \/_\\  \\ \/      | |`    | | | || |   | | | .---\'| |\r\n   | |  | |\\___,_\\ \/_\\ _      \/\/       | |     | \\_\/ || |   | | | |  \/\\| |\r\n   \/_\\  | |           \/\/_____\/\/       .||`      `._,\' | |   | | \\ `-\' \/| |\r\n        \/_\\           `------\'        \\ |   AND        `.\\  | |  `._,\' \/_\\\r\n                                       \\|       THE          `.\\                                    _                               \r\n  ___ _ __ ___  _ __ | | ___  _   _  ___  ___         \r\n \/ _ \\ \'_ ` _ \\| \'_ \\| |\/ _ \\| | | |\/ _ \\\/ _ \\        \r\n|  __\/ | | | | | |_) | | (_) | |_| |  __\/  __\/        \r\n \\___|_| |_| |_| .__\/|_|\\___\/ \\__, |\\___|\\___|        \r\n               |_|            |___\/                   \r\n                _       _        _                    \r\n             __| | __ _| |_ __ _| |__   __ _ ___  ___ \r\n            \/ _` |\/ _` | __\/ _` | \'_ \\ \/ _` \/ __|\/ _ \\\r\n           | (_| | (_| | || (_| | |_) | (_| \\__ \\  __\/\r\n            \\__,_|\\__,_|\\__\\__,_|_.__\/ \\__,_|___\/\\___|\r\n                                                     " )
 );
+
 
 promptQuestions();
 
@@ -127,9 +128,10 @@ function addDept() {
       db.query(
         "INSERT INTO department (name) VALUES (?)",
         [res.department],
-        function (err, results) {
+        function (err, res) {
           if (err) throw err;
-          console.table("Department added!");
+          console.table(res);
+          console.log("Department added!");
           promptQuestions();
         }
       );
@@ -192,9 +194,10 @@ function addEmp() {
       db.query(
         "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
         [res.firstName, res.lastName, res.roleId, res.managerId],
-        function (err, results) {
+        function (err, res) {
           if (err) throw err;
-          console.table("Employee Added");
+          console.table(res);
+          console.log("Employee Added")
         }
       );
       promptQuestions();
@@ -252,6 +255,7 @@ function addRole() {
         [res.roleTitle, res.roleSalary, res.departmentId],
         function (err, res) {
           if (err) throw err;
+          console.table(res);
           console.table("Role Added");
         }
       );
@@ -268,7 +272,7 @@ function updateEmp() {
         message: "Please type last name of employee you would like to update.",
         validate: (nameSearchCheck) => {
           if (nameSearchCheck) {
-            return true;
+            console.log("test");  return true; 
           } else {
             console.log(
               "Please type last name of employee you would like to update."
@@ -291,18 +295,24 @@ function updateEmp() {
           }
         },
       },
-    ])
-    .then(function (res) {
+    ]); console.log("test")
+    .then (function (res) {
       db.query(
         "UPDATE employee SET role_id = ? WHERE last_name = ?",
         [res.nameSearch, res.updateRoleId],
-        function (err, results) {
+        function (err, res) {
           if (err) throw err;
-          console.table("Employee info updated!");
+          console.table(res);
+          console.log("Employee info updated!");
         }
+     
       );
       promptQuestions();
-    });
+    }) .catch((error) => {
+      console.log(error) 
+    })
+  
+   
 }
 
 
