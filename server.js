@@ -295,7 +295,7 @@ function updateEmp() {
           }
         },
       },
-    ]); console.log("test")
+    ])
     .then (function (res) {
       db.query(
         "UPDATE employee SET role_id = ? WHERE last_name = ?",
@@ -308,9 +308,7 @@ function updateEmp() {
      
       );
       promptQuestions();
-    }) .catch((error) => {
-      console.log(error) 
-    })
+    }) 
   
    
 }
