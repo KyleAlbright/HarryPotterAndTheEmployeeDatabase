@@ -269,13 +269,13 @@ function updateEmp() {
       {
         type: "input",
         name: "nameSearch",
-        message: "Please type last name of employee you would like to update.",
+        message: "Please type ID of employee you would like to update.",
         validate: (nameSearchCheck) => {
           if (nameSearchCheck) {
-            console.log("test");  return true; 
+              return true; 
           } else {
             console.log(
-              "Please type last name of employee you would like to update."
+              "Please type ID of employee you would like to update."
             );
             return false;
           }
@@ -295,11 +295,11 @@ function updateEmp() {
           }
         },
       },
-    ])
+    ]) 
     .then (function (res) {
       db.query(
-        "UPDATE employee SET role_id = ? WHERE last_name = ?",
-        [res.nameSearch, res.updateRoleId],
+        "UPDATE employee SET role_id = ? WHERE id = ?",
+        [res.updateRoleId, res.nameSearch],
         function (err, res) {
           if (err) throw err;
           console.table(res);
