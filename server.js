@@ -13,9 +13,11 @@ const db = mysql.createConnection(
     password: "Bluecoats02!",
     database: "employees_db",
   },
-  console.log('\x1b[33m%s\x1b[0m',"                     _ __\r\n        ___                             | \'  \\\r\n   ___  \\ \/  ___         ,\'\\_           | .-. \\        \/|\r\n   \\ \/  | |,\'__ \\  ,\'\\_  |   \\          | | | |      ,\' |_   \/|\r\n _ | |  | |\\\/  \\ \\ |   \\ | |\\_|    _    | |_| |   _ \'-. .-\',\' |_   _\r\n\/\/ | |  | |____| | | |\\_|| |__    \/\/    |     | ,\'_`. | | \'-. .-\',\' `. ,\'\\_\r\n\\\\_| |_,\' .-, _  | | |   | |\\ \\  \/\/    .| |\\_\/ | \/ \\ || |   | | \/ |\\  \\|   \\\r\n `-. .-\'| |\/ \/ | | | |   | | \\ \\\/\/     |  |    | | | || |   | | | |_\\ || |\\_|\r\n   | |  | || \\_| | | |   \/_\\  \\ \/      | |`    | | | || |   | | | .---\'| |\r\n   | |  | |\\___,_\\ \/_\\ _      \/\/       | |     | \\_\/ || |   | | | |  \/\\| |\r\n   \/_\\  | |           \/\/_____\/\/       .||`      `._,\' | |   | | \\ `-\' \/| |\r\n        \/_\\           `------\'        \\ |   AND        `.\\  | |  `._,\' \/_\\\r\n                                       \\|       THE          `.\\                                    _                               \r\n  ___ _ __ ___  _ __ | | ___  _   _  ___  ___         \r\n \/ _ \\ \'_ ` _ \\| \'_ \\| |\/ _ \\| | | |\/ _ \\\/ _ \\        \r\n|  __\/ | | | | | |_) | | (_) | |_| |  __\/  __\/        \r\n \\___|_| |_| |_| .__\/|_|\\___\/ \\__, |\\___|\\___|        \r\n               |_|            |___\/                   \r\n                _       _        _                    \r\n             __| | __ _| |_ __ _| |__   __ _ ___  ___ \r\n            \/ _` |\/ _` | __\/ _` | \'_ \\ \/ _` \/ __|\/ _ \\\r\n           | (_| | (_| | || (_| | |_) | (_| \\__ \\  __\/\r\n            \\__,_|\\__,_|\\__\\__,_|_.__\/ \\__,_|___\/\\___|\r\n                                                     " )
+  console.log(
+    "\x1b[33m%s\x1b[0m",
+    "                     _ __\r\n        ___                             | '  \\\r\n   ___  \\ /  ___         ,'\\_           | .-. \\        /|\r\n   \\ /  | |,'__ \\  ,'\\_  |   \\          | | | |      ,' |_   /|\r\n _ | |  | |\\/  \\ \\ |   \\ | |\\_|    _    | |_| |   _ '-. .-',' |_   _\r\n// | |  | |____| | | |\\_|| |__    //    |     | ,'_`. | | '-. .-',' `. ,'\\_\r\n\\\\_| |_,' .-, _  | | |   | |\\ \\  //    .| |\\_/ | / \\ || |   | | / |\\  \\|   \\\r\n `-. .-'| |/ / | | | |   | | \\ \\//     |  |    | | | || |   | | | |_\\ || |\\_|\r\n   | |  | || \\_| | | |   /_\\  \\ /      | |`    | | | || |   | | | .---'| |\r\n   | |  | |\\___,_\\ /_\\ _      //       | |     | \\_/ || |   | | | |  /\\| |\r\n   /_\\  | |           //_____//       .||`      `._,' | |   | | \\ `-' /| |\r\n        /_\\           `------'        \\ |   AND        `.\\  | |  `._,' /_\\\r\n                                       \\|       THE          `.\\                                    _                               \r\n  ___ _ __ ___  _ __ | | ___  _   _  ___  ___         \r\n / _ \\ '_ ` _ \\| '_ \\| |/ _ \\| | | |/ _ \\/ _ \\        \r\n|  __/ | | | | | |_) | | (_) | |_| |  __/  __/        \r\n \\___|_| |_| |_| .__/|_|\\___/ \\__, |\\___|\\___|        \r\n               |_|            |___/                   \r\n                _       _        _                    \r\n             __| | __ _| |_ __ _| |__   __ _ ___  ___ \r\n            / _` |/ _` | __/ _` | '_ \\ / _` / __|/ _ \\\r\n           | (_| | (_| | || (_| | |_) | (_| \\__ \\  __/\r\n            \\__,_|\\__,_|\\__\\__,_|_.__/ \\__,_|___/\\___|\r\n                                                     "
+  )
 );
-
 
 promptQuestions();
 
@@ -37,6 +39,7 @@ function promptQuestions() {
         "Add an employee",
         "Remove an employee",
         "Update an employee role",
+        "Update an employee's manager",
         "QUIT",
       ],
       name: "choice",
@@ -55,8 +58,8 @@ function promptQuestions() {
           break;
 
         case "Remove a department":
-            deleteDept();
-            break;  
+          deleteDept();
+          break;
 
         case "View all roles":
           viewAllRoles();
@@ -67,8 +70,8 @@ function promptQuestions() {
           break;
 
         case "Remove a role":
-            deleteRole();
-            break;  
+          deleteRole();
+          break;
 
         case "View all employees":
           viewAllEmp();
@@ -84,6 +87,10 @@ function promptQuestions() {
 
         case "Update an employee role":
           updateEmp();
+          break;
+
+        case "Update an employee's manager":
+          updateEmpMan();
           break;
 
         default:
@@ -114,10 +121,13 @@ function viewAllEmp() {
 }
 //Queries all from the role table
 function viewAllRoles() {
-  db.query(`SELECT role.id, role.title, department.name AS department, role.salary FROM department LEFT JOIN role ON department.id = role.department_id ORDER BY department.id`, function (err, results) {
-    console.table(results);
-    promptQuestions();
-  });
+  db.query(
+    `SELECT role.id, role.title, department.name AS department, role.salary FROM department LEFT JOIN role ON department.id = role.department_id ORDER BY department.id`,
+    function (err, results) {
+      console.table(results);
+      promptQuestions();
+    }
+  );
 }
 
 function addDept() {
@@ -212,7 +222,7 @@ function addEmp() {
         function (err, res) {
           if (err) throw err;
           console.table(res);
-          console.log("Employee Added")
+          console.log("Employee Added");
         }
       );
       promptQuestions();
@@ -287,7 +297,7 @@ function updateEmp() {
         message: "Please type last name of employee you would like to update.",
         validate: (nameSearchCheck) => {
           if (nameSearchCheck) {
-              return true; 
+            return true;
           } else {
             console.log(
               "Please type last name of employee you would like to update."
@@ -310,8 +320,8 @@ function updateEmp() {
           }
         },
       },
-    ]) 
-    .then (function (res) {
+    ])
+    .then(function (res) {
       db.query(
         "UPDATE employee SET role_id = ? WHERE last_name = ?",
         [res.updateRoleId, res.nameSearch],
@@ -320,54 +330,54 @@ function updateEmp() {
           console.table(res);
           console.log("Employee info updated!");
         }
-     
       );
       promptQuestions();
-    }) 
-  
-   
+    });
 }
 //=============================BONUS FUNCTIONS====================================
 
-function deleteEmp(){
-//creates an array of all the employees from the db for the user to choose from. 
-  db.query("SELECT CONCAT(employee.first_name,' ',employee.last_name) AS full_name FROM employee;", function (err, res){
-    if (err) throw err;
-    let nameList =[];
-    for (let i = 0; i< res.length; i++){
-      nameList.push(res[i].full_name);
-    }
-    inquirer
-      .prompt({
-        type: "list",
-        name: "deleteEmployee",
-        message: "Please choose employee to remove",
-        choices: nameList
-
-      })
-      // kept getting a 1292 error, so saved the initial query in a variable, then concated the query in another variable. Found this workaround on stackoverflow. -https://stackoverflow.com/questions/16068993/error-code-1292-truncated-incorrect-double-value-mysql - using this workaround for all the delete functions.
-      .then (function (res) {
-        let query = "DELETE FROM employee WHERE CONCAT (employee.first_name, ' ', employee.last_name)=";
-        let concatQuery = query + `"` + res.deleteEmployee + `"`;
-        db.query(concatQuery, (err, res) => {
-         if (err) throw err;
-            console.table(res);
-            console.log("Employee removed")
-            promptQuestions()
-          }
-        )
-      });
-   
-  })
-
-}
-  
-function deleteDept(){
-  //creates an array of all the departments from the db for the user to choose from. 
-    db.query("SELECT department.id, department.name AS department FROM department;", function (err, res){
+function deleteEmp() {
+  //creates an array of all the employees from the db for the user to choose from.
+  db.query(
+    "SELECT CONCAT(employee.first_name,' ',employee.last_name) AS full_name FROM employee;",
+    function (err, res) {
       if (err) throw err;
-      let deptList =[];
-      for (let i = 0; i< res.length; i++){
+      let nameList = [];
+      for (let i = 0; i < res.length; i++) {
+        nameList.push(res[i].full_name);
+      }
+      inquirer
+        .prompt({
+          type: "list",
+          name: "deleteEmployee",
+          message: "Please choose employee to remove",
+          choices: nameList,
+        })
+        // kept getting a 1292 error, so saved the initial query in a variable, then concated the query in another variable. Found this workaround on stackoverflow. -https://stackoverflow.com/questions/16068993/error-code-1292-truncated-incorrect-double-value-mysql - using this workaround for all the delete functions.
+        //deleting the employee from the db
+        .then(function (res) {
+          let query =
+            "DELETE FROM employee WHERE CONCAT (employee.first_name, ' ', employee.last_name)=";
+          let concatQuery = query + `"` + res.deleteEmployee + `"`;
+          db.query(concatQuery, (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            console.log("Employee removed");
+            promptQuestions();
+          });
+        });
+    }
+  );
+}
+
+function deleteDept() {
+  //creates an array of all the departments from the db for the user to choose from.
+  db.query(
+    "SELECT department.id, department.name AS department FROM department;",
+    function (err, res) {
+      if (err) throw err;
+      let deptList = [];
+      for (let i = 0; i < res.length; i++) {
         deptList.push(res[i].department);
       }
       inquirer
@@ -375,55 +385,114 @@ function deleteDept(){
           type: "list",
           name: "deleteDepartment",
           message: "Please choose department to remove",
-          choices: deptList
-  
+          choices: deptList,
         })
-        .then (function (res) {
+        .then(function (res) {
           let query = "DELETE FROM department WHERE name=";
           let concatQuery = query + `"` + res.deleteDepartment + `"`;
           db.query(concatQuery, (err, res) => {
-           if (err) throw err;
-              console.table(res);
-              console.log("Department removed")
-              promptQuestions()
-            }
-          )
-        });
-     
-    })
-  
-  }
-
-  function deleteRole(){
-    //creates an array of all the roles from the db for the user to choose from. 
-      db.query("SELECT role.title FROM role;", function (err, res){
-        if (err) throw err;
-        let roleList =[];
-        for (let i = 0; i< res.length; i++){
-          roleList.push(res[i].title);
-        }
-        inquirer
-          .prompt({
-            type: "list",
-            name: "deleteRole",
-            message: "Please choose role to remove",
-            choices: roleList
-    
-          })
-          .then (function (res) {
-            let query = "DELETE FROM role WHERE role.title=";
-            let concatQuery = query + `"` + res.deleteRole + `"`;
-            db.query(concatQuery, (err, res) => {
-             if (err) throw err;
-                console.table(res);
-                console.log("Role removed")
-                promptQuestions()
-              }
-            )
+            if (err) throw err;
+            console.table(res);
+            console.log("Department removed");
+            promptQuestions();
           });
-       
-      })
-    
+        });
     }
-   
+  );
+}
 
+function deleteRole() {
+  //creates an array of all the roles from the db for the user to choose from.
+  db.query("SELECT role.title FROM role;", function (err, res) {
+    if (err) throw err;
+    let roleList = [];
+    for (let i = 0; i < res.length; i++) {
+      roleList.push(res[i].title);
+    }
+    inquirer
+      .prompt({
+        type: "list",
+        name: "deleteRole",
+        message: "Please choose role to remove",
+        choices: roleList,
+      })
+      .then(function (res) {
+        let query = "DELETE FROM role WHERE role.title=";
+        let concatQuery = query + `"` + res.deleteRole + `"`;
+        db.query(concatQuery, (err, res) => {
+          if (err) throw err;
+          console.table(res);
+          console.log("Role removed");
+          promptQuestions();
+        });
+      });
+  });
+}
+// I feel like this is so convoluted... but it works? There's prolly an easier way. Follows the logic of the delete functions.
+function updateEmpMan() {
+  // creates an array of all the employees from the db for the user to choose from.
+  db.query(
+    "SELECT CONCAT(employee.first_name,' ',employee.last_name) AS full_name FROM employee;",
+    function (err, res) {
+      if (err) throw err;
+      let nameList = [];
+      for (let i = 0; i < res.length; i++) {
+        nameList.push(res[i].full_name);
+      }
+      // prompt to ask which employee who's manager you want to change
+      inquirer
+        .prompt({
+          type: "list",
+          name: "updateEmployeeManager",
+          message:
+            "Please choose employee who's manager you would like to update",
+          choices: nameList,
+        })
+        // selecting that choice and storing it to a variable for later.
+        .then(function (res) {
+          let query =
+            "SELECT employee.id FROM employee WHERE CONCAT(employee.first_name,' ',employee.last_name)=";
+          let concatQuery = query + `"` + res.updateEmployeeManager + `"`;
+          db.query(concatQuery, (err, res) => {
+            if (err) throw err;
+            let empIdSelection = res[0].id;
+            inquirer
+              .prompt([
+                {
+                  type: "list",
+                  name: "chooseEmployeeManager",
+                  message: "Please choose manager to replace",
+                  choices: nameList,
+                },
+              ])
+              // Selecting the manager to replace. Lots of variables to concat - avoiding the 1292 errors
+              .then(function (res) {
+                let query =
+                  "Select employee.id FROM employee WHERE CONCAT(employee.first_name,' ',employee.last_name)=";
+                let concatQuery = query + `"` + res.chooseEmployeeManager + `"`;
+                db.query(concatQuery, (err, res) => {
+                  if (err) throw err;
+                  let manIdSelection = res[0].id;
+                  let query = "UPDATE employee SET employee.manager_id=";
+                  let endingQuery = " WHERE employee.id=";
+                  let concatQuery =
+                    query + manIdSelection + endingQuery + empIdSelection;
+                  db.query(concatQuery, (err, res) => {
+                    if (err) throw err;
+                  });
+                  console.log("Manager Updated");
+                  promptQuestions();
+                });
+              });
+            });
+          });
+        });
+      }
+
+
+
+// * Application allows users to view employees by manager (2 points).
+
+// * Application allows users to view employees by department (2 points).
+
+// * Application allows users to view the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department (8 points).
