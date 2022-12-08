@@ -40,6 +40,7 @@ function promptQuestions() {
         "Remove an employee",
         "Update an employee role",
         "Update an employee's manager",
+        "Update a role's salary",
         "QUIT",
       ],
       name: "choice",
@@ -91,6 +92,10 @@ function promptQuestions() {
 
         case "Update an employee's manager":
           updateEmpMan();
+          break;
+
+        case "Update a role's salary":
+          updateRoleSal();
           break;
 
         default:
@@ -484,14 +489,51 @@ function updateEmpMan() {
                   promptQuestions();
                 });
               });
-            });
           });
         });
-      }
+    }
+  );
+}
 
+function updateRoleSal() {
+  //creates an array of all the roles from the db for the user to choose from.
+  db.query("SELECT role.title FROM role;", function (err, res) {
+    if (err) throw err;
+    let roleList = [];
+    for (let i = 0; i < res.length; i++) {
+      roleList.push(res[i].title);
+    }
 
-
-// * Application allows users to view employees by manager (2 points).
+    // prompting questions to determine what role you wish to change the salary of, and what the new salary will be. 
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "chooseRole",
+          message: "Please choose the role where you want to change the salary",
+          choices: roleList,
+        },
+        {
+          type: "number",
+          name: "updateRoleSalary",
+          message: "Please enter new role salary",
+        },
+      ])
+// avoiding those 1292 errors - assigning the new salary to the chosen role
+      .then((res) => {
+        let chosenRole = res.chooseRole;
+        let chosenSalary = res.updateRoleSalary;
+        let query = "UPDATE role SET role.salary=";
+        let endingQuery = " WHERE role.title=";
+        let concatQuery = query + chosenSalary + endingQuery + `"` + chosenRole + `"`;
+        db.query(concatQuery, (err, res) => {
+          if (err) throw err;
+        });
+        console.log("Salary Updated");
+        promptQuestions();
+      });
+  });
+}
 
 // * Application allows users to view employees by department (2 points).
 
