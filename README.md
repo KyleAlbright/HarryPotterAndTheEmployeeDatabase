@@ -30,7 +30,14 @@ Please either download the zip file or clone the repository to download the code
 You will be prompted with many options to chose from. Please use the up and down arrows to navigate the fields. You may be asked to type information as well. When finished, please select QUIT from the options at the start.
 
 Link to video - https://app.castify.com/view/5b74982d-7a14-42aa-9832-a307f53652a9
+
 Link to Github Repo - https://github.com/KyleAlbright/HarryPotterAndTheEmployeeDatabase
+
+![Screenshot (49)](https://user-images.githubusercontent.com/110487869/206627548-012d9905-8479-4f8d-b365-b3e0887553e9.png)
+
+
+![Screenshot (50)](https://user-images.githubusercontent.com/110487869/206627558-7e7bca16-6558-4b0a-9792-c5bc3f255da0.png)
+
 
 ### [Contributing](#table-of-contents)
 I am currently not accepting contributions to this project.
