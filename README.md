@@ -17,7 +17,7 @@
 Learn more about my [mit](https://choosealicense.com/licenses/mit) license. 
 
 ### [Description](#table-of-contents)
-In this challenge, we where asked to create an employee database. In this app you can do a number of different things such as view different departments, roles, and employees. You can also add employees, roles, and departments, as well as update an employee's role; in the case they get a promotion. As a bonus this week we where tasked with a few other functions. I chose to add the delete employee, role, and department functionality. I also added the option to update an employees manager, and salary. Lastly I also made it an option to view employee by department. 
+In this challenge, we where asked to create an employee database. In this app you can do a number of different things such as view different departments, roles, and employees. You can also add employees, roles, and departments, as well as update an employee's role; in the case they get a promotion. As a bonus this week we where tasked with a few other functions. I chose to add the delete employee, role, and department functionality. I also added the option to update an employees manager, and salary.
 
 
 
