@@ -30,13 +30,14 @@ function promptQuestions() {
       type: "list",
       choices: [
         "View all departments",
-        "Add a department",
-        "Remove a department",
         "View all roles",
-        "Add a role",
-        "Remove a role",
         "View all employees",
+        // "View all employees by department",
+        "Add a department",
+        "Add a role",
         "Add an employee",
+        "Remove a department",
+        "Remove a role",
         "Remove an employee",
         "Update an employee role",
         "Update an employee's manager",
@@ -86,6 +87,10 @@ function promptQuestions() {
           deleteEmp();
           break;
 
+        // case "View all employees by department":
+        //   viewEmpByDept();
+        //   break;
+
         case "Update an employee role":
           updateEmp();
           break;
@@ -134,7 +139,7 @@ function viewAllRoles() {
     }
   );
 }
-
+//prompts the user to enter name of department they want to add.
 function addDept() {
   inquirer
     .prompt([
@@ -154,6 +159,7 @@ function addDept() {
         },
       },
     ])
+    // inserts the user data into the department table
     .then(function (res) {
       db.query(
         "INSERT INTO department (name) VALUES (?)",
@@ -167,7 +173,7 @@ function addDept() {
       );
     });
 }
-
+//prompts the user to enter name and role / manager ID of employee they want to add.
 function addEmp() {
   inquirer
     .prompt([
@@ -220,6 +226,7 @@ function addEmp() {
           "What is the employee's Manager ID? If the employee doesn't need one, leave blank.",
       },
     ])
+    // insert that data collected into the employee table
     .then(function (res) {
       db.query(
         "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
@@ -233,7 +240,7 @@ function addEmp() {
       promptQuestions();
     });
 }
-
+//prompts the user to enter name of role they want to add as well as the salary and department ID.
 function addRole() {
   inquirer
     .prompt([
@@ -279,6 +286,7 @@ function addRole() {
         },
       },
     ])
+    //insert that into the role table
     .then(function (res) {
       db.query(
         "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
@@ -292,7 +300,7 @@ function addRole() {
       promptQuestions();
     });
 }
-
+// search for employee by last name. Validation check so we can make sure we enter the correct data
 function updateEmp() {
   inquirer
     .prompt([
@@ -311,7 +319,7 @@ function updateEmp() {
           }
         },
       },
-
+      //enter new ID
       {
         type: "number",
         name: "updateRoleId",
@@ -326,6 +334,8 @@ function updateEmp() {
         },
       },
     ])
+
+    // set the new data in the table
     .then(function (res) {
       db.query(
         "UPDATE employee SET role_id = ? WHERE last_name = ?",
@@ -504,7 +514,7 @@ function updateRoleSal() {
       roleList.push(res[i].title);
     }
 
-    // prompting questions to determine what role you wish to change the salary of, and what the new salary will be. 
+    // prompting questions to determine what role you wish to change the salary of, and what the new salary will be.
     inquirer
       .prompt([
         {
@@ -519,13 +529,14 @@ function updateRoleSal() {
           message: "Please enter new role salary",
         },
       ])
-// avoiding those 1292 errors - assigning the new salary to the chosen role
+      // avoiding those 1292 errors - assigning the new salary to the chosen role
       .then((res) => {
         let chosenRole = res.chooseRole;
         let chosenSalary = res.updateRoleSalary;
         let query = "UPDATE role SET role.salary=";
         let endingQuery = " WHERE role.title=";
-        let concatQuery = query + chosenSalary + endingQuery + `"` + chosenRole + `"`;
+        let concatQuery =
+          query + chosenSalary + endingQuery + `"` + chosenRole + `"`;
         db.query(concatQuery, (err, res) => {
           if (err) throw err;
         });
@@ -534,6 +545,37 @@ function updateRoleSal() {
       });
   });
 }
+//never got this one working -- really close though I think
+
+// function viewEmpByDept(){
+//   db.query("SELECT department.id, department.name AS department FROM department;",
+//   function (err, res) {
+//     if (err) throw err;
+//     let deptList = [];
+//     for (let i = 0; i < res.length; i++) {
+//       deptList.push(res[i].department);
+//     }
+//     inquirer
+//     .prompt({
+//       type: "list",
+//       name: "viewDeptEmployees",
+//       message: "Please choose which department's employees you would like to view",
+//       choices: deptList,
+//     })
+//     .then (function (res) {
+//       let chosenDept = res.viewDeptEmployees;
+//       console.log(chosenDept)
+//       let query = `SELECT employee.first_name, employee.last_name, department.department_name FROM employee JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE department.department_name=`;
+//       let concatQuery = query + `"` + chosenDept + `"`;
+//       db.query(concatQuery, (err, res) => {
+//         if (err) throw err;
+//         console.log("test");
+//       });
+//       // console.table(res);
+//       promptQuestions();
+//     })
+//   })
+// }
 
 // * Application allows users to view employees by department (2 points).
 
